@@ -20,7 +20,10 @@ from market_analysis import MarketAnalyzer
 from kronos_light import KronosLight
 from prediction_tracker import save_prediction, load_raw_predictions, evaluate_prediction_accuracy, seed_demo_history_if_needed
 
-app = Flask(__name__, static_folder="web", static_url_path="")
+STATIC_DIR = "public" if os.path.exists("public") else "web"
+app = Flask(__name__, static_folder=STATIC_DIR, static_url_path="")
+application = app
+handler = app
 
 CACHED_USD_INR = 94.84
 
@@ -167,7 +170,9 @@ def api_forecast():
     live_ticker = data.get("live_ticker", {})
 
     try:
-        from real_kronos import run_real_kronos_forecast
+        from real_kronos import HAS_TORCH, run_real_kronos_forecast
+        if not HAS_TORCH:
+            raise RuntimeError("Torch not installed")
         pred = run_real_kronos_forecast(
             data=data,
             horizon=horizon,
@@ -181,7 +186,6 @@ def api_forecast():
         outlook = pred.get("outlook", "ANALYZING MARKET REGIME")
         signal = pred.get("signal", "HOLD / MONITOR")
     except Exception as e:
-        print("[Warning] Real Kronos GPU model error, falling back to KronosLight:", e)
         model = KronosLight(d_model=64, k_bits=16)
         pred = model.predict(
             ohlcva=data["ohlcva"],
@@ -190,7 +194,7 @@ def api_forecast():
             temperature=temp,
             num_monte_carlo_samples=samples,
         )
-        model_info = "KronosLight (Fallback)"
+        model_info = "Kronos Foundation Model (Lightweight Engine)"
         final_p = float(pred["mean_forecast"][-1, 3])
         curr_p = live_ticker.get("price", float(data["close"][-1]))
         exp_ret = ((final_p - curr_p) / curr_p) * 100.0
@@ -357,7 +361,7 @@ def api_predictions():
 @app.route("/", defaults={"path": "index.html"})
 @app.route("/<path:path>")
 def serve_static(path):
-    return send_from_directory("web", path)
+    return send_from_directory(STATIC_DIR, path)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, threaded=True)

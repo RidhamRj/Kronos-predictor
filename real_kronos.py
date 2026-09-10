@@ -14,7 +14,12 @@ import sys
 import datetime
 import numpy as np
 import pandas as pd
-import torch
+try:
+    import torch
+    HAS_TORCH = True
+except ImportError:
+    torch = None
+    HAS_TORCH = False
 
 # Add Kronos_official to python search path
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -34,7 +39,9 @@ def get_kronos_predictor(model_name: str = "NeoQuasar/Kronos-base", tokenizer_na
     if _PREDICTOR_INSTANCE is not None:
         return _PREDICTOR_INSTANCE
 
-    import torch
+    if not HAS_TORCH:
+        raise RuntimeError("PyTorch is not installed in this environment. Use KronosLight.")
+
     from model import Kronos, KronosTokenizer, KronosPredictor
 
     if torch.cuda.is_available():
@@ -78,6 +85,8 @@ def run_real_kronos_forecast(
     """
     Executes real autoregressive neural network inference on the provided historical K-lines.
     """
+    if not HAS_TORCH:
+        raise RuntimeError("PyTorch is not installed in this environment. Use KronosLight.")
     predictor = get_kronos_predictor(model_name=model_name, device=device)
 
     # 1. Format input into DataFrame
