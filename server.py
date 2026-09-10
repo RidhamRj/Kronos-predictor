@@ -54,6 +54,20 @@ def add_cors_headers(response):
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     return response
 
+@app.route("/api/debug", methods=["GET"])
+@app.route("/debug", methods=["GET"])
+def api_debug():
+    return jsonify({
+        "path": request.path,
+        "full_path": request.full_path,
+        "url": request.url,
+        "environ_path_info": request.environ.get("PATH_INFO"),
+        "environ_request_uri": request.environ.get("REQUEST_URI"),
+        "x_matched_path": request.headers.get("x-matched-path"),
+        "headers": dict(request.headers),
+        "args": dict(request.args)
+    })
+
 @app.route("/api", methods=["GET"])
 @app.route("/api/status", methods=["GET"])
 @app.route("/status", methods=["GET"])
