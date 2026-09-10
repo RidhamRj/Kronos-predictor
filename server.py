@@ -69,6 +69,14 @@ def api_debug():
     })
 
 @app.route("/api", methods=["GET"])
+def api_root():
+    return jsonify({
+        "service": "Kronos MCX Goldm Live Predictor",
+        "status": "healthy",
+        "headers": dict(request.headers),
+        "environ": {k: str(v) for k, v in request.environ.items() if isinstance(v, (str, int, float))}
+    })
+
 @app.route("/api/status", methods=["GET"])
 @app.route("/status", methods=["GET"])
 def api_status():
