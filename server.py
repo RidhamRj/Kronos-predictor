@@ -54,11 +54,14 @@ def add_cors_headers(response):
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     return response
 
+@app.route("/api", methods=["GET"])
 @app.route("/api/status", methods=["GET"])
+@app.route("/status", methods=["GET"])
 def api_status():
     return jsonify({"status": "healthy", "service": "Kronos MCX Goldm Live Predictor"})
 
 @app.route("/api/tick", methods=["GET"])
+@app.route("/tick", methods=["GET"])
 def api_tick():
     expiry = request.args.get("expiry", "2026-10-05")
     usd_inr = fetch_live_usd_inr()
@@ -67,6 +70,7 @@ def api_tick():
     return jsonify(ticker)
 
 @app.route("/api/live", methods=["GET"])
+@app.route("/live", methods=["GET"])
 def api_live():
     interval = request.args.get("interval", "1h")
     limit = min(max(int(request.args.get("limit", "350")), 30), 1000)
@@ -151,6 +155,7 @@ def api_live():
     return jsonify(payload)
 
 @app.route("/api/forecast", methods=["GET"])
+@app.route("/forecast", methods=["GET"])
 def api_forecast():
     interval = request.args.get("interval", "1h")
     limit = min(max(int(request.args.get("lookback", "350")), 30), 1000)
@@ -319,6 +324,7 @@ def api_forecast():
     return jsonify(payload)
 
 @app.route("/api/predictions", methods=["GET", "POST"])
+@app.route("/predictions", methods=["GET", "POST"])
 def api_predictions():
     if request.method == "POST":
         try:
