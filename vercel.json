@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/api"
+      "source": "/api/:path*",
+      "destination": "/api?__route=/:path*"
     }
   ]
 }
