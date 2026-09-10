@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCX Goldm Price Live — Moneycontrol Rate & Kronos AI Predictor</title>
+  <meta name="description" content="Live MCX Gold Mini (Goldm) futures quotes, market depth, technicals, pivot levels, and Kronos Foundation Model forecasts in Indian Rupees (₹).">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪙</text></svg>">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Breadcrumb Bar (Moneycontrol Style) -->
+    <nav class="breadcrumb-nav">
+      <span class="bc-link">Home</span>
+      <span class="bc-sep">›</span>
+      <span class="bc-link">Commodities</span>
+      <span class="bc-sep">›</span>
+      <span class="bc-link">Bullion</span>
+      <span class="bc-sep">›</span>
+      <span class="bc-current">Goldm Futures</span>
+      <div class="mcx-market-status">
+        <span class="status-pulse-dot"></span>
+        <span class="status-text">MCX : OPEN (09:00 - 23:30 IST)</span>
+      </div>
+    </nav>
+
+    <!-- Top Quote Header (Moneycontrol & Broker Hybrid) -->
+    <header class="top-bar">
+      <div class="header-left">
+        <div class="title-meta-row">
+          <h1 class="commodity-title">Goldm</h1>
+          <span class="badge-pill pill-futures">FUTURES</span>
+          <span class="badge-pill pill-exchange">MCX</span>
+          <span class="badge-pill pill-lotsize" id="lot-size-badge">Lot Size: 100 GRMS</span>
+          <span class="live-stream-pill">
+            <span class="pulse-green-dot"></span> LIVE STREAMING
+          </span>
+        </div>
+
+        <div class="expiry-selector-row">
+          <label for="expiry-select" class="expiry-label">Contract Expiry:</label>
+          <select id="expiry-select" class="expiry-dropdown" title="Select Contract Expiry">
+            <option value="2026-10-05" selected>05 Oct, 2026</option>
+            <option value="2026-11-05">05 Nov, 2026</option>
+            <option value="2026-12-04">04 Dec, 2026</option>
+            <option value="2027-01-05">05 Jan, 2027</option>
+            <option value="2027-02-05">05 Feb, 2027</option>
+            <option value="2027-03-05">05 Mar, 2027</option>
+          </select>
+          <span class="source-credit">Data Source: Moneycontrol MCX Feed</span>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="live-price-block">
+          <span class="currency-symbol">₹</span>
+          <span id="spot-price" class="live-quote-price">153,300.00</span>
+          <div id="price-change-wrapper" class="quote-change positive">
+            <span class="arrow-icon">▲</span>
+            <span id="change-abs">547.00</span>
+            <span id="change-pct">(+0.36%)</span>
+          </div>
+        </div>
+        <div class="as-of-time">
+          As on <span id="last-sync-time">09 Sep, 2026 | 18:08 IST</span>
+          <span class="auto-tick-label">• Auto-polling every 5s (<span id="countdown-label">5s</span>)</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="logo-badge">
+          <span class="logo-symbol">⧗</span>
+          <span class="logo-title">KRONOS AI</span>
+        </div>
+        <span class="paper-badge">AAAI 2026 Foundation Model</span>
+        <button id="btn-refresh-live" class="btn-refresh" title="Force Refresh Market Feed">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          Refresh Feed
+        </button>
+      </div>
+    </header>
+
+    <!-- Moneycontrol Commodity Overview Statistics Grid -->
+    <section class="mc-overview-grid">
+      <!-- Card 1: Open & Previous Close -->
+      <div class="mc-stat-card">
+        <div class="card-mini-label">PRICE OVERVIEW</div>
+        <div class="stat-dual-row">
+          <div class="dual-item">
+            <span class="stat-caption">Open</span>
+            <span id="overview-open" class="dual-val">₹ 152,634.00</span>
+          </div>
+          <div class="dual-item">
+            <span class="stat-caption">Prev. Close</span>
+            <span id="overview-prev-close" class="dual-val">₹ 152,753.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Day's Range -->
+      <div class="mc-stat-card range-card">
+        <div class="card-mini-label">DAY'S RANGE (L - H)</div>
+        <div class="range-wrapper">
+          <div class="range-labels">
+            <span>Low: <strong id="overview-low">₹ 152,210.00</strong></span>
+            <span>High: <strong id="overview-high">₹ 153,848.00</strong></span>
+          </div>
+          <div class="range-track-container">
+            <div class="range-track-bar">
+              <div id="range-bullet-pin" class="range-bullet-pin" style="left: 68%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: ATP & Volume & Value -->
+      <div class="mc-stat-card">
+        <div class="card-mini-label">TURNOVER & ATP</div>
+        <div class="stat-dual-row">
+          <div class="dual-item">
+            <span class="stat-caption">Avg Traded Price (ATP)</span>
+            <span id="overview-atp" class="dual-val">₹ 153,299.02</span>
+          </div>
+          <div class="dual-item">
+            <span class="stat-caption">Traded Vol / Val (Lacs)</span>
+            <span id="overview-vol-val" class="dual-val">23.37L / ₹ 3.58L</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Open Interest & Buildup -->
+      <div class="mc-stat-card oi-card">
+        <div class="card-mini-label">OPEN INTEREST (OI) ANALYSIS</div>
+        <div class="oi-header-row">
+          <span id="overview-oi" class="oi-main-val">32,069</span>
+          <span id="overview-oi-buildup" class="oi-buildup-tag green">LONG BUILDUP</span>
+        </div>
+        <div class="oi-sub-row">
+          <span>OI Change: <strong id="overview-oi-chg" style="color:var(--bull-green);">+157 (+0.49%)</strong></span>
+          <span class="oi-hint">OI ↑, Price ↑</span>
+        </div>
+      </div>
+
+      <!-- Card 5: Market Depth -->
+      <div class="mc-stat-card depth-card">
+        <div class="card-mini-label">MARKET DEPTH (BEST BID / ASK)</div>
+        <div class="stat-dual-row">
+          <div class="dual-item">
+            <span class="stat-caption">Best Bid (Qty)</span>
+            <span id="overview-bid" class="dual-val depth-bid">₹ 153,296.00 (1)</span>
+          </div>
+          <div class="dual-item">
+            <span class="stat-caption">Best Ask (Qty)</span>
+            <span id="overview-ask" class="dual-val depth-ask">₹ 153,313.00 (1)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Moneycontrol Technical Stance & Pivot Levels Ribbon -->
+    <section class="mc-technicals-bar">
+      <div class="tech-stance-box">
+        <span class="tech-label">MC TECHNICAL STANCE:</span>
+        <span id="tech-stance-badge" class="tech-stance-pill bullish">VERY BULLISH</span>
+        <span class="tech-sub-text">RSI & EMA Alignment</span>
+      </div>
+      <div class="pivots-horizontal-row">
+        <span class="pivots-title">MCX Classic Pivots:</span>
+        <div class="pivot-item"><span class="p-tag">S3:</span> <strong id="pivot-s3">₹ 150,753</strong></div>
+        <div class="pivot-item"><span class="p-tag">S2:</span> <strong id="pivot-s2">₹ 151,481</strong></div>
+        <div class="pivot-item"><span class="p-tag">S1:</span> <strong id="pivot-s1">₹ 152,391</strong></div>
+        <div class="pivot-item main-pivot"><span class="p-tag">PIVOT (P):</span> <strong id="pivot-p">₹ 153,119</strong></div>
+        <div class="pivot-item"><span class="p-tag">R1:</span> <strong id="pivot-r1">₹ 154,029</strong></div>
+        <div class="pivot-item"><span class="p-tag">R2:</span> <strong id="pivot-r2">₹ 154,757</strong></div>
+        <div class="pivot-item"><span class="p-tag">R3:</span> <strong id="pivot-r3">₹ 155,667</strong></div>
+      </div>
+    </section>
+
+    <!-- Control Toolbar -->
+    <div class="control-deck">
+      <div class="control-group" title="Timeframe: Duration of each candlestick (15m, 1h, 4h, 1d)">
+        <label class="control-label">Timeframe</label>
+        <div class="pill-selector" id="interval-selector">
+          <button class="pill" data-interval="15m">15m</button>
+          <button class="pill active" data-interval="1h">1h</button>
+          <button class="pill" data-interval="4h">4h</button>
+          <button class="pill" data-interval="1d">1d</button>
+        </div>
+      </div>
+
+      <div class="control-group" title="Forecast Horizon: How many future candles Kronos AI will predict into the future">
+        <label for="horizon-select" class="control-label">Forecast Horizon</label>
+        <select id="horizon-select" class="styled-select">
+          <option value="6">6 Periods Ahead</option>
+          <option value="12" selected>12 Periods Ahead</option>
+          <option value="18">18 Periods Ahead</option>
+          <option value="24">24 Periods Ahead</option>
+        </select>
+      </div>
+
+      <div class="control-group" title="Monte Carlo Rollouts: Number of parallel simulation paths generated to create the 90% confidence cloud">
+        <label for="samples-select" class="control-label">Monte Carlo Rollouts</label>
+        <select id="samples-select" class="styled-select">
+          <option value="3">3 Paths (Fast)</option>
+          <option value="5">5 Paths (Standard)</option>
+          <option value="10" selected>10 Paths (High Confidence)</option>
+          <option value="20">20 Paths (Deep Ensemble)</option>
+        </select>
+      </div>
+
+      <div class="control-group" title="Temperature (0.1 to 1.0): AI sampling randomness. Low (0.1-0.3) = deterministic/stable trend. High (0.8+) = high volatility / exploration">
+        <label for="temp-slider" class="control-label">
+          Temp: <span id="temp-val">0.2</span>
+        </label>
+        <input type="range" id="temp-slider" min="0.1" max="1.0" step="0.1" value="0.2" class="styled-slider">
+      </div>
+
+      <button id="btn-run-forecast" class="btn-primary">
+        <span class="btn-glow"></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <span>Run Kronos AI Forecast</span>
+      </button>
+    </div>
+
+    <!-- Main Workspace Grid -->
+    <main class="main-grid">
+      <!-- Left: Interactive Charts -->
+      <section class="chart-panel">
+        <!-- Mode Switcher: Live Forecast vs Prediction Comparison -->
+        <div class="panel-mode-bar">
+          <div class="mode-tabs">
+            <button id="tab-mode-live" class="mode-tab-btn active">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="12 6 12 12 16 14"></polygon></svg>
+              <span>Live Forecast View</span>
+            </button>
+            <button id="tab-mode-compare" class="mode-tab-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+              <span>Compare Prediction vs Reality</span>
+              <span class="badge-mini-count" id="compare-history-count">1</span>
+            </button>
+          </div>
+          <div id="forming-candle-timer" class="forming-candle-pill">
+            <span class="forming-pulse-dot"></span>
+            <span id="forming-timer-text">Active Candle: Forming</span>
+          </div>
+        </div>
+
+        <div class="panel-header">
+          <div class="chart-legend">
+            <span class="legend-item"><span class="legend-box hist-bull"></span> Live Bullish</span>
+            <span class="legend-item"><span class="legend-box hist-bear"></span> Live Bearish</span>
+            <span class="legend-divider">|</span>
+            <span class="legend-item"><span class="legend-box forecast-glow"></span> Kronos Forecast Mean</span>
+            <span class="legend-item"><span class="legend-box band-fill"></span> 90% Confidence Band</span>
+            <span class="legend-item" id="legend-overlay-item" style="display:none;"><span class="legend-box overlay-glow"></span> Past Prediction (Amber)</span>
+          </div>
+          <div class="chart-status-info" id="chart-status-info">Connecting to Moneycontrol MCX Goldm feed...</div>
+        </div>
+
+        <div class="chart-container" id="chart-wrapper">
+          <div class="chart-float-toolbar">
+            <button id="btn-chart-zoom-in" class="chart-tool-btn" title="Zoom In (+)">+</button>
+            <button id="btn-chart-zoom-out" class="chart-tool-btn" title="Zoom Out (−)">−</button>
+            <button id="btn-chart-reset" class="chart-tool-btn reset-btn" title="Reset View (Jump to Live Candle)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+              <span>Live</span>
+            </button>
+          </div>
+          <div class="chart-pan-hint" id="chart-pan-hint">
+            <span class="pan-icon">⇄</span> Drag to pan history | Scroll to zoom
+          </div>
+          <canvas id="main-candlestick-canvas"></canvas>
+          <div id="chart-tooltip" class="chart-tooltip hidden"></div>
+        </div>
+
+        <!-- Quick Range Buttons (TradingView style at bottom) -->
+        <div class="chart-range-bar">
+          <div class="range-buttons" id="quick-range-selector">
+            <span class="range-label">Quick View:</span>
+            <button class="range-btn" data-bars="30">30 Bars</button>
+            <button class="range-btn active" data-bars="65">65 Bars</button>
+            <button class="range-btn" data-bars="120">120 Bars</button>
+            <button class="range-btn" data-bars="250">250 Bars</button>
+            <button class="range-btn" data-bars="400">All History</button>
+          </div>
+          <div class="visible-range-info" id="visible-range-info">Viewing latest candles</div>
+        </div>
+
+        <!-- Prediction vs Reality Tracker Panel -->
+        <div class="compare-panel hidden" id="compare-panel">
+          <div class="compare-header">
+            <div class="compare-selector-group">
+              <label for="past-prediction-select" class="compare-label">Select Past Prediction to Compare:</label>
+              <select id="past-prediction-select" class="styled-select compare-select"></select>
+            </div>
+            <div class="compare-actions">
+              <label class="compare-toggle-label">
+                <input type="checkbox" id="chk-overlay-prediction" checked>
+                <span>Overlay on Candlestick Chart (Amber Path)</span>
+              </label>
+              <button id="btn-save-current-pred" class="btn-secondary" title="Save current live forecast snapshot to track future accuracy">
+                📌 Save Current Snapshot
+              </button>
+            </div>
+          </div>
+
+          <!-- Realized Accuracy Scorecard -->
+          <div class="compare-scorecard-grid">
+            <div class="scorecard-item">
+              <span class="scorecard-caption">Directional Accuracy</span>
+              <span id="metric-dir-acc" class="scorecard-val positive">--%</span>
+              <span id="metric-dir-sub" class="scorecard-sub">0 of 0 correct</span>
+            </div>
+            <div class="scorecard-item">
+              <span class="scorecard-caption">Rupee Variance (MAE)</span>
+              <span id="metric-mae-inr" class="scorecard-val">₹ --</span>
+              <span id="metric-mae-pct" class="scorecard-sub">0.00% avg error</span>
+            </div>
+            <div class="scorecard-item">
+              <span class="scorecard-caption">90% Confidence Coverage</span>
+              <span id="metric-band-cov" class="scorecard-val positive">--%</span>
+              <span class="scorecard-sub">Real prices within band</span>
+            </div>
+            <div class="scorecard-item">
+              <span class="scorecard-caption">Outcome Status</span>
+              <span id="metric-status-badge" class="status-badge neutral">IN PROGRESS</span>
+              <span id="metric-target-info" class="scorecard-sub">Target: ₹ --</span>
+            </div>
+          </div>
+
+          <!-- Detailed Step Comparison Table -->
+          <div class="compare-table-wrapper">
+            <table class="styled-table compare-table">
+              <thead>
+                <tr>
+                  <th>Step</th>
+                  <th>Timestamp</th>
+                  <th>Predicted Close</th>
+                  <th>Actual Realized Close</th>
+                  <th>Variance (₹)</th>
+                  <th>Variance (%)</th>
+                  <th>Direction Match</th>
+                  <th>Within 90% Band</th>
+                </tr>
+              </thead>
+              <tbody id="compare-table-body">
+                <tr><td colspan="8" style="text-align:center; color:var(--text-muted);">Select a past prediction above to view verification metrics.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="sub-chart-container">
+          <div class="sub-chart-header">
+            <span class="sub-title">VOLUME TURNOVER & RELATIVE STRENGTH INDEX (RSI 14)</span>
+            <span id="current-rsi-val" class="sub-value">RSI: --</span>
+          </div>
+          <canvas id="sub-oscillator-canvas"></canvas>
+        </div>
+      </section>
+
+      <!-- Right: Technical Diagnostics & Alpha Signal -->
+      <aside class="sidebar-panel">
+        <!-- Synthesized Confluence Trade Decision Card -->
+        <div class="card verdict-card" id="confluence-card">
+          <div class="card-header-compact">
+            <span class="card-eyebrow">FINAL TRADE DECISION (SYNTHESIZED)</span>
+            <span id="verdict-confluence-badge" class="status-badge neutral">1 / 3 CONFLICT</span>
+          </div>
+          <div id="verdict-action-title" class="verdict-headline wait">WAIT / NO TRADE (CONFLICT)</div>
+          
+          <div class="verdict-explanation" id="verdict-reason-text">
+            Synthesizing Kronos-base AI, MCX Order Flow (OI), and Technical baselines...
+          </div>
+
+          <div class="verdict-checklist">
+            <div class="chk-item" id="chk-kronos">
+              <span class="chk-name"><span>🧠</span> Kronos-base AI</span>
+              <span class="chk-status warn" id="chk-kronos-val">EVALUATING</span>
+            </div>
+            <div class="chk-item" id="chk-oi">
+              <span class="chk-name"><span>📊</span> MCX Order Flow (OI)</span>
+              <span class="chk-status pass" id="chk-oi-val">LONG BUILDUP</span>
+            </div>
+            <div class="chk-item" id="chk-trend">
+              <span class="chk-name"><span>📈</span> Technical Baseline</span>
+              <span class="chk-status pass" id="chk-trend-val">ABOVE 50 EMA</span>
+            </div>
+          </div>
+
+          <div class="verdict-levels-grid">
+            <div class="v-level-box">
+              <span class="v-caption">Action</span>
+              <span id="v-action-tag" class="v-val wait">STAY IN CASH</span>
+            </div>
+            <div class="v-level-box">
+              <span class="v-caption">Invalidation / Stop</span>
+              <span id="v-stop-loss" class="v-val">₹ --</span>
+            </div>
+            <div class="v-level-box">
+              <span class="v-caption">Target Zone</span>
+              <span id="v-target-zone" class="v-val">₹ --</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alpha Signal Card (Raw Kronos AI Output) -->
+        <div class="card signal-card">
+          <div class="card-header-compact">
+            <span id="model-badge-info" class="card-eyebrow">KRONOS AI (RTX 3050 CUDA)</span>
+            <span id="signal-badge" class="status-badge bullish">BULLISH BIAS</span>
+          </div>
+          <div id="signal-title" class="signal-headline">BUY / LONG BIAS</div>
+          <div class="signal-stats-grid">
+            <div class="stat-box">
+              <span class="stat-caption">Target Price (₹)</span>
+              <span id="target-price" class="stat-number">153,980.00</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-caption">Expected Return</span>
+              <span id="expected-return" class="stat-number positive">+0.43%</span>
+            </div>
+          </div>
+          <div class="spread-indicator">
+            <div class="spread-labels">
+              <span>90% Low: <strong id="band-low">₹ 152,800</strong></span>
+              <span>90% High: <strong id="band-high">₹ 154,650</strong></span>
+            </div>
+            <div class="spread-bar-track">
+              <div id="spread-bar-fill" class="spread-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Market Regime Card -->
+        <div class="card regime-card">
+          <span class="card-eyebrow">MARKET REGIME & OI SUMMARY</span>
+          <div id="market-regime-text" class="regime-headline">LONG BUILDUP (OI ↑, PRICE ↑)</div>
+        </div>
+
+        <!-- Indicator Matrix -->
+        <div class="card indicators-card">
+          <div class="card-header-compact">
+            <span class="card-eyebrow">QUANTITATIVE MATRIX (₹)</span>
+          </div>
+          <div class="indicator-rows">
+            <div class="ind-row">
+              <span class="ind-name">EMA (20) Trend</span>
+              <span id="ind-ema20" class="ind-val">₹ 153,180.00</span>
+            </div>
+            <div class="ind-row">
+              <span class="ind-name">EMA (50) Baseline</span>
+              <span id="ind-ema50" class="ind-val">₹ 152,950.00</span>
+            </div>
+            <div class="ind-row">
+              <span class="ind-name">RSI (14) Momentum</span>
+              <span id="ind-rsi" class="ind-val">58.4</span>
+            </div>
+            <div class="ind-row">
+              <span class="ind-name">ATR (14) Volatility</span>
+              <span id="ind-atr" class="ind-val">₹ 420.00</span>
+            </div>
+            <div class="ind-row">
+              <span class="ind-name">Realized Volatility</span>
+              <span id="ind-vol" class="ind-val">0.24%</span>
+            </div>
+            <div class="ind-row">
+              <span class="ind-name">Bollinger Upper (+2σ)</span>
+              <span id="ind-bb-up" class="ind-val">₹ 154,120.00</span>
+            </div>
+            <div class="ind-row">
+              <span class="ind-name">Bollinger Lower (-2σ)</span>
+              <span id="ind-bb-low" class="ind-val">₹ 152,480.00</span>
+            </div>
+            <div class="ind-row">
+              <span class="ind-name">MACD Histogram</span>
+              <span id="ind-macd" class="ind-val">+42.50</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Forecast Data Table Section -->
+    <section class="forecast-table-section">
+      <div class="table-card">
+        <div class="table-header">
+          <h3>MCX Goldm Multi-Step Future Price Projections (₹ Indian Rupees)</h3>
+          <span class="table-subtitle">Decoded discrete token sequence calibrated to live MCX Gold Mini futures contract</span>
+        </div>
+        <div class="table-responsive">
+          <table class="styled-table" id="forecast-table">
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Time (IST)</th>
+                <th>Contract</th>
+                <th>Open (₹)</th>
+                <th>High (₹)</th>
+                <th>Low (₹)</th>
+                <th>Close (₹)</th>
+                <th>Expected Change</th>
+                <th>90% Confidence Interval</th>
+              </tr>
+            </thead>
+            <tbody id="forecast-table-body">
+              <tr>
+                <td colspan="9" class="table-empty">Click "Run Kronos AI Forecast" to project future Goldm candles.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>MCX Gold Mini (Goldm) Futures • Powered by Moneycontrol Feed & Kronos Foundation Model (AAAI 2026) • All Quotes in Indian Rupees (₹)</p>
+    </footer>
+  </div>
+
+    <!-- Auto-Reevaluation Toast Notification -->
+    <div id="auto-reeval-toast" class="auto-reeval-toast">
+      <span style="font-size:1.2rem;">⚡</span>
+      <div style="display:flex; flex-direction:column; gap:2px;">
+        <strong id="toast-title" style="color:#38bdf8;">Auto-Reevaluation Triggered</strong>
+        <span id="toast-message" style="font-size:0.72rem; color:var(--text-secondary);">Market condition shifted. Fresh Kronos-base forecast generated.</span>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
