@@ -62,20 +62,23 @@ def get_kronos_predictor(model_name: str = "NeoQuasar/Kronos-base", tokenizer_na
         clip=5.0
     )
     print("[Kronos Loader] Official Foundation Model successfully loaded in VRAM!")
+    print("[Kronos Loader] Official Foundation Model successfully loaded!")
     return _PREDICTOR_INSTANCE
 
 
 def run_real_kronos_forecast(
     data: dict,
     horizon: int = 12,
-    temperature: float = 0.2,
+    temperature: float = 0.1,
     top_p: float = 0.9,
-    sample_count: int = 3
+    sample_count: int = 5,
+    model_name: str = "NeoQuasar/Kronos-mini",
+    device: str = "cpu"
 ) -> dict:
     """
     Executes real autoregressive neural network inference on the provided historical K-lines.
     """
-    predictor = get_kronos_predictor()
+    predictor = get_kronos_predictor(model_name=model_name, device=device)
 
     # 1. Format input into DataFrame
     df = pd.DataFrame({
