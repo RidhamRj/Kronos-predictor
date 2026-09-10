@@ -1,0 +1,55 @@
+{
+  "execution_time": "2026-09-09T12:20:34.305304+00:00",
+  "asset": "Gold (PAXG/USDT)",
+  "current_price": 4400.05,
+  "horizon": 6,
+  "expected_return_pct": -0.07779957831079101,
+  "outlook": "NEUTRAL / MEAN-REVERTING",
+  "tactical_signal": "RANGE-BOUND / VOLATILITY HARVESTING",
+  "indicators": {
+    "current_price": 4400.05,
+    "pct_change_1_period": -0.02294901682776918,
+    "pct_change_24_periods": -0.03930228225853095,
+    "ema_20": 4401.469243581225,
+    "ema_50": 4393.951796632942,
+    "sma_20": 4402.7525000000005,
+    "rsi_14": 50.25421377678531,
+    "atr_14": 5.909417680019904,
+    "realized_volatility_pct": 0.07695940163074617,
+    "bollinger_upper": 4413.6160387880755,
+    "bollinger_mid": 4402.7525000000005,
+    "bollinger_lower": 4391.888961211926,
+    "macd": 3.090189983417986,
+    "macd_signal": 3.7828972677150112,
+    "macd_hist": -0.6927072842970254,
+    "candle_body_ratio": 25.525525525509696,
+    "upper_wick_ratio": 0.9009009009205853,
+    "lower_wick_ratio": 73.57357357356972,
+    "volume_surge_ratio": 0.5580433742180477,
+    "market_regime": "Range-Bound Equilibrium / Choppy"
+  },
+  "forecast_mean_close": [
+    4404.7327317721065,
+    4431.035955253936,
+    4423.435360196421,
+    4399.63410101997,
+    4409.151933459788,
+    4396.626779654536
+  ],
+  "forecast_upper_95": [
+    4418.991167039099,
+    4450.713769778491,
+    4447.889564655508,
+    4424.60571252148,
+    4425.527085779007,
+    4430.3174082250625
+  ],
+  "forecast_lower_5": [
+    4391.548942280005,
+    4407.468439815161,
+    4403.669818323697,
+    4383.968519934923,
+    4398.4332414774735,
+    4374.893649380662
+  ]
+}
