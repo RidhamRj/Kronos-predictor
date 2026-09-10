@@ -68,14 +68,6 @@ def api_debug():
         "args": dict(request.args)
     })
 
-@app.route("/api", methods=["GET"])
-def api_root():
-    return jsonify({
-        "service": "Kronos MCX Goldm Live Predictor",
-        "status": "healthy",
-        "headers": dict(request.headers),
-        "environ": {k: str(v) for k, v in request.environ.items() if isinstance(v, (str, int, float))}
-    })
 
 @app.route("/api/status", methods=["GET"])
 @app.route("/status", methods=["GET"])
@@ -385,6 +377,26 @@ def api_predictions():
     raw_preds = load_raw_predictions()
     evaluated = [evaluate_prediction_accuracy(p, candle_map) for p in raw_preds]
     return jsonify({"predictions": evaluated})
+
+@app.route("/api", methods=["GET", "POST"])
+def api_root():
+    subroute = request.args.get("__route") or request.args.get("path")
+    if subroute:
+        subroute = subroute.strip("/")
+        if subroute == "tick":
+            return api_tick()
+        elif subroute == "live":
+            return api_live()
+        elif subroute == "forecast":
+            return api_forecast()
+        elif subroute == "predictions":
+            return api_predictions()
+        elif subroute == "status":
+            return api_status()
+        elif subroute == "debug":
+            return api_debug()
+
+    return jsonify({"status": "healthy", "service": "Kronos MCX Goldm Live Predictor"})
 
 @app.route("/", defaults={"path": "index.html"})
 @app.route("/<path:path>")
